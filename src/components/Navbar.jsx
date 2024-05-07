@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { links, socials } from '@/constants';
+import { motion } from 'framer-motion';
+import { links, socials } from '../constants/index';
 import NavLink from './NavLink';
 
 const Navbar = () => {
@@ -11,6 +12,59 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setOpenMenu((prevValue) => !prevValue);
+  };
+
+  const topVariants = {
+    closed: {
+      rotate: 0,
+    },
+    opened: {
+      rotate: 45,
+      backgroundColor: 'rgb(255, 255, 255)',
+    },
+  };
+
+  const centerVariants = {
+    closed: {
+      opacity: 1,
+    },
+    opened: {
+      opacity: 0,
+    },
+  };
+
+  const bottomVariants = {
+    closed: {
+      rotate: 0,
+    },
+    opened: {
+      rotate: -45,
+      backgroundColor: 'rgb(255, 255, 255)',
+    },
+  };
+
+  const listVariants = {
+    closed: {
+      x: '100vw',
+    },
+    opened: {
+      x: 0,
+      transition: {
+        when: 'beforeChildren',
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const listItemVariants = {
+    closed: {
+      x: -10,
+      opacity: 0,
+    },
+    opened: {
+      x: 0,
+      opacity: 1,
+    },
   };
 
   return (
@@ -30,27 +84,56 @@ const Navbar = () => {
       {/* menu */}
       <div className='md:hidden'>
         <button
-          className='w-10 h-8 flex flex-col justify-between relative z-50'
+          className={`w-10 h-8 flex flex-col justify-between relative z-50`}
           onClick={toggleMenu}
         >
           {new Array(3).fill(1).map((_, index) => (
-            <div
+            <motion.div
               key={index}
-              className={`w-10 h-1 rounded ${
-                openMenu ? 'bg-white' : 'bg-black'
+              className={`w-10 h-1 rounded bg-black ${
+                openMenu && 'origin-left'
               }`}
-            ></div>
+              variants={
+                index === 0
+                  ? topVariants
+                  : index === 1
+                  ? centerVariants
+                  : bottomVariants
+              }
+              animate={
+                openMenu && index === 0
+                  ? 'opened'
+                  : !openMenu && index === 0
+                  ? 'closed'
+                  : openMenu && index === 1
+                  ? 'opened'
+                  : !openMenu && index === 1
+                  ? 'closed'
+                  : openMenu && index === 2
+                  ? 'opened'
+                  : 'closed'
+              }
+            ></motion.div>
           ))}
         </button>
         {/* menu list */}
         {openMenu && (
-          <div className='absolute top-0 left-0 w-screen h-screen bg-black text-white flex flex-col items-center justify-center gap-8 text-4xl'>
+          <motion.div
+            className='absolute top-0 left-0 w-screen h-screen bg-black text-white flex flex-col items-center justify-center gap-8 text-4xl z-10'
+            variants={listVariants}
+            initial='closed'
+            animate='opened'
+          >
             {links.map(({ url, title }, index) => (
-              <Link key={index} href={url}>
-                {title}
-              </Link>
+              <motion.div
+                key={index}
+                variants={listItemVariants}
+                onClick={toggleMenu}
+              >
+                <Link href={url}>{title}</Link>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
       {/* responsive link */}

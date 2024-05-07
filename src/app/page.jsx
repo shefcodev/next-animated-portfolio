@@ -3,7 +3,7 @@ import Image from 'next/image';
 const Homepage = () => {
   return (
     <section className='flex flex-col h-full wrapper lg:flex-row'>
-      <div className='h-1/2 lg:h-full lg:w-1/2 relative ]'>
+      <div className='h-1/2 lg:h-full lg:w-1/2 relative'>
         <Image src='/hero.png' alt='hero' fill className='object-contain' />
       </div>
       <div className='h-1/2 lg:h-full lg:w-1/2 flex flex-col justify-center gap-8'>
