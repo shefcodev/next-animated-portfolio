@@ -1,9 +1,21 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useInView } from 'framer-motion';
 import { skills } from '../../constants';
+import Brain from '../../components/Brain';
 
 const AboutPage = () => {
+  const containerRef = useRef();
+  const skillRef = useRef();
+  const experienceRef = useRef();
+
+  const { scrollYProgress } = useScroll({ container: containerRef });
+  const isSkillRefInView = useInView(skillRef, {
+    once: true,
+  });
+  const isExperienceRefInView = useInView(experienceRef, { once: true });
+
   return (
     <motion.div
       className='h-full'
@@ -11,8 +23,12 @@ const AboutPage = () => {
       animate={{ y: 0 }}
       transition={{ duration: 1 }}
     >
-      <section className='h-full overflow-y-scroll'>
-        <div className='p-4 sm:p-8 md:p-12 lg:p-20 xl:p-48 flex flex-col gap-24 md:gap-32 lg:gap-48'>
+      <section
+        className='h-full overflow-y-scroll lg:flex'
+        ref={containerRef}
+        onScroll={() => console.log(scrollYProgress)}
+      >
+        <div className='p-4 sm:p-8 md:p-12 lg:p-20 xl:p-48 flex flex-col gap-24 md:gap-32 lg:gap-48 xl:gap-64 lg:pr-0 lg:w-2/3 xl:w-1/2'>
           <div className='flex flex-col gap-12 justify-center'>
             <h1 className='font-bold text-2xl'>BIOGRAPHY</h1>
             <p className='text-lg'>
@@ -31,14 +47,31 @@ const AboutPage = () => {
             <div className='self-end'>
               <p className='text-2xl font-thin italic'>_shefco_</p>
             </div>
-            <button className='w-fit border-2 border-gray-500 px-3 py-5 rounded-full font-normal'>
+            <motion.button
+              className='w-fit border-2 border-gray-500 px-3 py-5 rounded-full font-normal'
+              initial={{ opacity: 0.2, y: 0 }}
+              animate={{ opacity: 1, y: '10px' }}
+              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+            >
               |
-            </button>
+            </motion.button>
           </div>
 
-          <div className='flex flex-col gap-12 justify-center'>
-            <h1 className='font-bold text-2xl'>SKILLS</h1>
-            <div className='flex flex-wrap gap-4'>
+          <div className='flex flex-col gap-12 justify-center' ref={skillRef}>
+            <motion.h1
+              className='font-bold text-2xl'
+              initial={{ x: '-300px' }}
+              animate={isSkillRefInView ? { x: 0 } : {}}
+              transition={{ delay: 0.2 }}
+            >
+              SKILLS
+            </motion.h1>
+            <motion.div
+              className='flex flex-wrap gap-4'
+              initial={{ x: '-300px' }}
+              animate={isSkillRefInView ? { x: 0 } : {}}
+              transition={{ delay: 0.2 }}
+            >
               {skills.map((skill, index) => (
                 <div
                   key={index}
@@ -47,16 +80,35 @@ const AboutPage = () => {
                   {skill}
                 </div>
               ))}
-            </div>
-            <button className='w-fit border-2 border-gray-500 px-3 py-5 rounded-full font-normal'>
+            </motion.div>
+            <motion.button
+              className='w-fit border-2 border-gray-500 px-3 py-5 rounded-full font-normal'
+              initial={{ opacity: 0.2, y: 0 }}
+              animate={{ opacity: 1, y: '10px' }}
+              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+            >
               |
-            </button>
+            </motion.button>
           </div>
 
-          <div className='flex flex-col gap-12 justify-center pb-48'>
-            <h1 className='font-bold text-2xl'>EXPERIENCE</h1>
+          <div
+            className='flex flex-col gap-12 justify-center pb-48'
+            ref={experienceRef}
+          >
+            <motion.h1
+              className='font-bold text-2xl'
+              initial={{ x: '-300px' }}
+              animate={isExperienceRefInView ? { x: 0 } : {}}
+              transition={{ delay: 0.2 }}
+            >
+              EXPERIENCE
+            </motion.h1>
 
-            <div>
+            <motion.div
+              initial={{ x: '-300px' }}
+              animate={isExperienceRefInView ? { x: 0 } : {}}
+              transition={{ delay: 0.2 }}
+            >
               <div className='flex justify-between'>
                 <div className='w-1/3'>
                   <div className='bg-white p-3 font-semibold rounded-b-lg rounded-s-lg w-fit'>
@@ -131,10 +183,13 @@ const AboutPage = () => {
 
                 <div className='w-1/3'></div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
-        <div className=''></div>
+
+        <div className='hidden lg:block lg:w-1/3 xl:w-1/2 sticky top-0 z-30'>
+          <Brain scrollYProgress={scrollYProgress} />
+        </div>
       </section>
     </motion.div>
   );
