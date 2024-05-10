@@ -13,3 +13,17 @@ export const socials = [
   { src: '/linkedin.png', alt: 'linkedin' },
   { src: '/pinterest.png', alt: 'pinterest' },
 ];
+
+export const skills = [
+  'Javascript',
+  'Typescript',
+  'Tailwind CSS',
+  'shadcn',
+  'SCSS',
+  'Framer motion',
+  'React-Transition',
+  'Redux',
+  'Reactjs',
+  'Nextjs',
+  'Node',
+];
